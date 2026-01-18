@@ -1,5 +1,5 @@
 import dotenv from "dotenv"
-dotenv.config({path: './.env'})
+dotenv.config({ path: './.env' })
 
 
 import mongoose from "mongoose"
@@ -13,8 +13,8 @@ const conectDB = async () => {
 
         console.log(`\nMONGOODB IS CONNECTED !!!!! ${take.connection.host}`)
     } catch (error) {
-        console.log('MONGOODB CONNECTION ERROR.....',error)
-        process.exit(1);
+        console.log('MONGODB CONNECTION ERROR.....', error);
+        // process.exit(1);
     }
 }
 export default conectDB

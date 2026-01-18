@@ -1,6 +1,10 @@
 import mongoose,{Schema} from "mongoose";
 
 const jobSchema = new Schema({
+    job_id: {
+        type: String,
+        required: true
+    },
     title: {
        type: String,
        required: true
@@ -42,4 +46,4 @@ const jobSchema = new Schema({
     
 },{timestamps:true})
 
-export default Job = mongoose.model("Job",jobSchema);
+export const Job = mongoose.model("Job",jobSchema);

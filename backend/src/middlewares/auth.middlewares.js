@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken"
-import { User } from "../models/candidate.models.js"
+import { Candidate } from "../models/candidate.models.js"
 import { apiError } from "../utils/apiError.js"
 import { asyncHandler } from "../utils/asyncHandler.js"
 import dotenv from "dotenv"
@@ -17,7 +17,7 @@ const verifyJWT = asyncHandler(async(req,res,next) => {
         if(!decodeToken){
             throw new apiError(500,"something went wrong")
         }
-        const user = await User.findById(decodeToken?._id).select("-password -refreshToken")
+        const user = await Candidate.findById(decodeToken?._id).select("-password -refreshToken")
         if(!user){
             throw new apiError(401,"wrong......")
         }

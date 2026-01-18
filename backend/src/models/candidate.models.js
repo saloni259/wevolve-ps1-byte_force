@@ -1,15 +1,15 @@
-import mongoose,{Schema} from "mongoose";
+import mongoose, { Schema } from "mongoose";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
 const educationSchema = new Schema({
     degree: {
-        type:String,
+        type: String,
         required: true,
         trim: true
     },
     field: {
-        type:String,
+        type: String,
         required: true,
         trim: true
     },
@@ -19,7 +19,7 @@ const educationSchema = new Schema({
         min: 0,
         max: 10
     }
-},{_id:false})
+}, { _id: false })
 
 const requirmentSchema = new Schema({
     skills: {
@@ -27,35 +27,35 @@ const requirmentSchema = new Schema({
         required: true
     },
     experience_years: {
-      type: Number,
-      required: true,
-      min: 0
+        type: Number,
+        required: true,
+        min: 0
     },
 
     preferred_locations: {
-      type: [String],
-      required: true
+        type: [String],
+        required: true
     },
 
     preferred_roles: {
-      type: [String],
-      required: true
+        type: [String],
+        required: true
     },
 
     expected_salary: {
-      type: Number,
-      required: true,
-      min: 0
+        type: Number,
+        required: true,
+        min: 0
     },
 
     education: {
-      type: educationSchema,
-      required: true
+        type: educationSchema,
+        required: true
     }
-},{_id:false})
+}, { _id: false })
 
 const candidateSchema = new Schema({
-    username: {
+    fullname: {
         type: String,
         required: true
     },
@@ -68,46 +68,40 @@ const candidateSchema = new Schema({
         type: String,
         required: true
     },
-    profile: {
-        type: String
-    },
-    profile_id: {
-        type: String
-    },
+    // profile: {
+    //     type: String
+    // },
+    // profile_id: {
+    //     type: String
+    // },
     refreshToken: {
         type: String
     },
-    chatHistory: [
-        {
-            type: mongoose.Types.ObjectId,
-            ref: "Chat"
-        }
-    ],
-   requirment: {
-     type: requirmentSchema,
-     required: true
-   }
 
-    
-},{timestamps:true})
+    requirment: {
+        type: requirmentSchema,
+        required: true
+    }
 
 
-candidateSchema.pre("save",async function(next){
-    if(!this.isModified("password")) return next;
-    this.password = await bcrypt.hash(this.password,10)
-     next;
-})
+}, { timestamps: true })
 
 
-candidateSchema.methods.isPasswordCorrect = async function (password){
-    return await bcrypt.compare(password,this.password)
+candidateSchema.pre("save", async function () {
+    if (!this.isModified("password")) return;
+    this.password = await bcrypt.hash(this.password, 10);
+});
+
+
+candidateSchema.methods.isPasswordCorrect = async function (password) {
+    return await bcrypt.compare(password, this.password)
 }
 
-candidateSchema.methods.generateAccessToken =  function () {
-   return  jwt.sign(
+candidateSchema.methods.generateAccessToken = function () {
+    return jwt.sign(
         {
             _id: this._id,
-            
+
         },
         process.env.ACCESS_TOKEN_SECRET,
         {
@@ -118,14 +112,14 @@ candidateSchema.methods.generateAccessToken =  function () {
 
 
 candidateSchema.methods.generateRefreshToken = async function () {
-    return  jwt.sign(
+    return jwt.sign(
         {
             _id: this._id,
-            
+
         },
         process.env.REFRESH_TOKEN_SECRET,
         {
-           expiresIn: process.env.REFRESH_TOKEN_EXPIRY
+            expiresIn: process.env.REFRESH_TOKEN_EXPIRY
         }
     )
 }
@@ -134,4 +128,4 @@ candidateSchema.methods.generateRefreshToken = async function () {
 
 
 
-export const Candidate = mongoose.model("Candidate",candidateSchema)
+export const Candidate = mongoose.model("Candidate", candidateSchema)
